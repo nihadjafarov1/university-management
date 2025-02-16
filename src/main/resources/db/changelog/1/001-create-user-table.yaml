@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-user-table
+      author: nihad_jafarov
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: varchar(255)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: status
+                  type: varchar(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: action_status
+                  type: varchar(1)
+              - column:
+                  name: insert_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified_date
+                  type: timestamp
+              - column:
+                  name: modified_by
+                  type: varchar(255)
+              - column:
+                  name: username
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(100)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
