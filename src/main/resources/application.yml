@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/university_db
+    username: nihad
+    password: Nihad123
+    driver-class-name: org.postgresql.Driver
+#  liquibase:
+#    change-log: ${CHW_LIQUIBASE_CHANGE-LOG}
+#    enabled: true
+#    drop-first: ${CHW_LIQUIBASE_DROP_FIRST}
+#    default-schema: ${CHW_LIQUIBASE_DEFAULT_SCHEMA}
+#    database-change-log-table: ${CHW_LIQUIBASE_CHANGE-LOG_TABLE}
+#    database-change-log-lock-table: ${CHW_LIQUIBASE_CHANGE-LOG_LOCK_TABLE}
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
