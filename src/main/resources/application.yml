@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:postgresql://localhost:5432/university_db
     username: nihad
@@ -13,7 +15,7 @@ spring:
 #    database-change-log-lock-table: ${CHW_LIQUIBASE_CHANGE-LOG_LOCK_TABLE}
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
