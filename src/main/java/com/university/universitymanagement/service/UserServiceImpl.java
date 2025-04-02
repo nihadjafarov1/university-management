@@ -1,12 +1,16 @@
 package com.university.universitymanagement.service;
 
+import com.university.universitymanagement.dto.auth.request.AuthRequest;
 import com.university.universitymanagement.dto.auth.request.RegisterRequest;
 import com.university.universitymanagement.entity.User;
 import com.university.universitymanagement.enums.UserRole;
 import com.university.universitymanagement.repository.auth.RoleRepository;
 import com.university.universitymanagement.repository.auth.UserRepository;
+import com.university.universitymanagement.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,21 +27,25 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
+    AuthenticationManager authenticationManager;
+    JwtUtil jwtUtil;
 
+    public String login(AuthRequest authRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+        UserDetails userDetails = this.loadUserByUsername(authRequest.getUsername());
+        return jwtUtil.generateToken(userDetails.getUsername());
 
-    // Method to check if the username already exists
+    }
+
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
-    // Method to register a new user
-    public String registerUser(RegisterRequest registerRequest) {
-        // Step 1: Check if the username already exists
+    public String register(RegisterRequest registerRequest) {
         if (usernameExists(registerRequest.getUsername())) {
             return "Username is already taken!";
         }
 
-        // Step 2: Create a new user object and encode the password
         User newUser = new User();
         newUser.setUsername(registerRequest.getUsername());
         newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Hash the password
@@ -45,14 +53,11 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Role not found: " + UserRole.ROLE_STUDENT);
         });
 
-        // Step 3: Save the new user in the database
         userRepository.save(newUser);
 
-        // Step 4: Return a success message
         return "User registered successfully!";
     }
 
-    // Method to load user by username for authentication
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
