@@ -2,70 +2,18 @@ package com.university.universitymanagement.service;
 
 import com.university.universitymanagement.dto.auth.request.AuthRequest;
 import com.university.universitymanagement.dto.auth.request.RegisterRequest;
-import com.university.universitymanagement.entity.User;
-import com.university.universitymanagement.enums.UserRole;
-import com.university.universitymanagement.repository.auth.RoleRepository;
-import com.university.universitymanagement.repository.auth.UserRepository;
-import com.university.universitymanagement.util.JwtUtil;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
-@RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
 @Service
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository;
-    RoleRepository roleRepository;
-    PasswordEncoder passwordEncoder;
-    AuthenticationManager authenticationManager;
-    JwtUtil jwtUtil;
-
-    public String login(AuthRequest authRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        UserDetails userDetails = this.loadUserByUsername(authRequest.getUsername());
-        return jwtUtil.generateToken(userDetails.getUsername());
-
-    }
-
-    public boolean usernameExists(String username) {
-        return userRepository.findByUsername(username).isPresent();
-    }
-
+    @Override
     public String register(RegisterRequest registerRequest) {
-        if (usernameExists(registerRequest.getUsername())) {
-            return "Username is already taken!";
-        }
-
-        User newUser = new User();
-        newUser.setUsername(registerRequest.getUsername());
-        newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // Hash the password
-        roleRepository.findByName(UserRole.ROLE_STUDENT).ifPresentOrElse(newUser::setRole, () -> {
-            throw new RuntimeException("Role not found: " + UserRole.ROLE_STUDENT);
-        });
-
-        userRepository.save(newUser);
-
-        return "User registered successfully!";
+        return "User registered successfully";
     }
 
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().toString()))
-        );
+    @Override
+    public String login(AuthRequest authRequest) {
+        return "User logged in successfully";
     }
 }
