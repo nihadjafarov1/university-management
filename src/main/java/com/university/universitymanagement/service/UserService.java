@@ -2,10 +2,11 @@ package com.university.universitymanagement.service;
 
 import com.university.universitymanagement.dto.auth.request.AuthRequest;
 import com.university.universitymanagement.dto.auth.request.RegisterRequest;
+import com.university.universitymanagement.dto.auth.response.AuthResponse;
 
 public interface UserService {
 
     String register(RegisterRequest registerRequest);
 
-    String login(AuthRequest authRequest);
+    AuthResponse login(AuthRequest authRequest);
 }
