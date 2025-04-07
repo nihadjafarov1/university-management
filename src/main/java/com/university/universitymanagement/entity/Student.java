@@ -19,7 +19,7 @@ public class Student extends BaseEntity {
     Person person;
 
     @Column(name = "student_number", nullable = false, unique = true)
-    String studentNumber;
+    Long studentNo;
 
     @Column(name = "email")
     String email;
